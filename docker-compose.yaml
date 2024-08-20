@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  db:  
+    image: postgres:latest
+    shm_size: 2048mb
+    environment:
+      POSTGRES_USER: "alex"
+      POSTGRES_PASSWORD: "12345"
+    restart: always
+    ports:
+      - 5432:5432
