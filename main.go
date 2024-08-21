@@ -16,13 +16,19 @@ func main() {
 	db.DB.AutoMigrate(models.Tasks{})
 	db.DB.AutoMigrate(models.User{})
 
-	route := mux.NewRouter()
-	//Routes
-	route.HandleFunc("/", routes.Homehandler)
-	route.HandleFunc("/users", routes.GetUsersHandler).Methods("GET")
-	route.HandleFunc("/users/{id}", routes.GetUserHandler).Methods("GET")
-	route.HandleFunc("/users", routes.PostUserHandler).Methods("POST")
-	route.HandleFunc("/users/{id}", routes.DeleteUsersHandler).Methods("DELETE")
+	r := mux.NewRouter()
+	//Users Roter
+	r.HandleFunc("/", routes.Homehandler)
+	r.HandleFunc("/users", routes.GetUsersHandler).Methods("GET")
+	r.HandleFunc("/users/{id}", routes.GetUserHandler).Methods("GET")
+	r.HandleFunc("/users", routes.PostUserHandler).Methods("POST")
+	r.HandleFunc("/users/{id}", routes.DeleteUsersHandler).Methods("DELETE")
 
-	http.ListenAndServe(":3000", route)
+	//Tasks Router
+	r.HandleFunc("/tasks", routes.GetTasksHandler).Methods("GET")
+	r.HandleFunc("/tasks/{id}", routes.GetTaskHandler).Methods("GET")
+	r.HandleFunc("/tasks", routes.AddtTaskHandler).Methods("POST")
+	r.HandleFunc("/tasks/{id}", routes.DeleteTaskHandler).Methods("DELETE")
+
+	http.ListenAndServe(":3000", r)
 }
