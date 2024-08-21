@@ -29,7 +29,7 @@ func GetTaskHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&task)
 
 }
-func AddtTaskHandler(w http.ResponseWriter, r *http.Request) {
+func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 	var task models.Tasks
 	json.NewDecoder(r.Body).Decode(&task)
 
