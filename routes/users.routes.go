@@ -6,23 +6,33 @@ import (
 
 	"github.com/alfatigo/Go-API-Course/db"
 	"github.com/alfatigo/Go-API-Course/models"
+	"github.com/gorilla/mux"
 )
 
-func GetUsersHandler(w http.ResponseWriter, routes *http.Request) {
+func GetUsersHandler(w http.ResponseWriter, r *http.Request) {
 	var users []models.User
 	db.DB.Find(&users)
 
 	json.NewEncoder(w).Encode(&users)
 
-	// w.Write([]byte("Get Users"))
 }
 
-func GetUserHandler(w http.ResponseWriter, routes *http.Request) {
-	w.Write([]byte("Get User"))
-}
-func PostUserHandler(w http.ResponseWriter, routes *http.Request) {
+func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	var user models.User
-	json.NewDecoder(routes.Body).Decode(&user)
+
+	params := mux.Vars(r)
+	db.DB.First(&user, params["id"])
+	if user.ID == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("User not Found!"))
+		return
+	}
+	json.NewEncoder(w).Encode(&user)
+
+}
+func PostUserHandler(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	json.NewDecoder(r.Body).Decode(&user)
 
 	createdUser := db.DB.Create(&user)
 	err := createdUser.Error
@@ -36,6 +46,16 @@ func PostUserHandler(w http.ResponseWriter, routes *http.Request) {
 
 	w.Write([]byte("Create User"))
 }
-func DeleteUsersHandler(w http.ResponseWriter, routes *http.Request) {
-	w.Write([]byte("Delete User"))
+func DeleteUsersHandler(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	params := mux.Vars(r)
+	db.DB.First(&user, params["id"])
+	if user.ID == 0 {
+
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("User not Found!"))
+		return
+	}
+	db.DB.Unscoped().Delete(&user)
+	w.WriteHeader(http.StatusOK)
 }

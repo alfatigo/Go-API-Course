@@ -22,7 +22,7 @@ func main() {
 	route.HandleFunc("/users", routes.GetUsersHandler).Methods("GET")
 	route.HandleFunc("/users/{id}", routes.GetUserHandler).Methods("GET")
 	route.HandleFunc("/users", routes.PostUserHandler).Methods("POST")
-	route.HandleFunc("/users/{id}", routes.PostUserHandler).Methods("DELETE")
+	route.HandleFunc("/users/{id}", routes.DeleteUsersHandler).Methods("DELETE")
 
 	http.ListenAndServe(":3000", route)
 }
